@@ -6,18 +6,19 @@ const Statistics = ({good, neutral, bad}) => {
   const average = ( good - bad ) / all
   const positive = good / all * 100.0
 
-  return (
-    <>
-      <h5> statistics </h5>
-        <p> good {good} </p>
-        <p> neutral {neutral} </p>
-        <p> bad {bad} </p>
-        <hr />
-        <p> all {all} </p>
-        <p> average {average} </p>
-        <p> positive {positive} % </p>
-    </>
-  )
+  return (all === 0)
+    ? ( <h5> No feedback given yet </h5> )
+    : ( <>
+        <h5> statistics </h5>
+          <p> good {good} </p>
+          <p> neutral {neutral} </p>
+          <p> bad {bad} </p>
+          <hr />
+          <p> all {all} </p>
+          <p> average {average} </p>
+          <p> positive {positive} % </p>
+      </> )
+
 }
 
 const App = () => {
