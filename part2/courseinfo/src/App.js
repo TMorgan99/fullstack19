@@ -10,15 +10,17 @@ const Part = ({part}) =>
   </p>
 
 const Content = ({parts}) =>
-  <>
-    <Part part={parts[0]} />
-    <Part part={parts[1]} />
-    <Part part={parts[2]} />
-  </>
+  parts.map( part =>
+    <Part key={part.name} part={part} />
+  )
 
 const Total = ({parts}) =>
   <p>
-    Number of exercises {parts[0].exercises + parts[1].exercises + parts[2].exercises}
+    Total of  {
+      parts
+        .map( part => part.exercises )
+        .reduce((a,b) => a+b )
+    } exercises
   </p>
 
 const Course = ({course}) =>
