@@ -5,7 +5,9 @@ const Button = ({name, fn}) =>
   <button onClick={fn} > {name} </button>
 
 const Statistic = ({name, value}) =>
-  <p> {name} {value} </p>
+  <tr>
+    <td> {name} </td><td> {value} </td>
+  </tr>
 
 
 const Statistics = ({good, neutral, bad}) => {
@@ -16,18 +18,23 @@ const Statistics = ({good, neutral, bad}) => {
   return (all === 0)
     ? ( <h5> No feedback given yet </h5> )
     : ( <>
-        <h5> statistics </h5>
+        <table>
+        <caption> statistics </caption>
+        <tbody>
           <Statistic name='good' value={good} />
           <Statistic name='neutral' value={neutral} />
           <Statistic name='bad' value={bad} />
-          <hr />
+          <tr><td colSpan='2'><hr /></td></tr>
           <Statistic name='all' value={all} />
           <Statistic name='average' value={average} />
           <Statistic name='positive' value={positive + '%' } />
-
+          </tbody>
+        </table>
       </> )
 
 }
+
+// Warning: Invalid DOM property `colspan`. Did you mean `colSpan`?
 
 const App = () => {
   // save clicks of each button to own state
