@@ -31,6 +31,12 @@ const App = () => {
       name: newName,
     }
 
+    const isFound = phoneNumbers.find(listing => listing.name === newName)
+    if (isFound) {
+      alert( `${newName} has already been added to phonebook`)
+      return
+    }
+
     setPhoneNumbers(phoneNumbers.concat(phoneNumberObject))
     setNewName('')
   }
