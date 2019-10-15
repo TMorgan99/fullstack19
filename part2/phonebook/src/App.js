@@ -2,33 +2,45 @@ import React, {useState} from 'react'
 import './App.css'
 
 const PhoneNumber = ({phoneNumber}) =>
-  <>
-    {phoneNumber.name}
-    <br />
-  </>
+  <tr>
+    <td>{phoneNumber.name}</td>
+    <td>{phoneNumber.number}</td>
+  </tr>
 
 const PhoneList = ({phoneNumbers}) =>
   <>
     <h2>Numbers</h2>
-    { phoneNumbers.map( phoneNumber =>
-      <PhoneNumber key={phoneNumber.name} phoneNumber={phoneNumber} />
-    ) }
+    <table className='center' >
+      <tbody>
+        <tr>
+          <th> Name </th>
+          <th> Number </th>
+        </tr>
+        { phoneNumbers.map( phoneNumber =>
+          <PhoneNumber key={phoneNumber.name} phoneNumber={phoneNumber} />
+        ) }
+      </tbody>
+    </table>
   </>
 
 const App = () => {
   const [ phoneNumbers, setPhoneNumbers] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number: '553' }
   ])
   const [ newName, setNewName ] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
 
   const handleNameChange = (event) =>
     setNewName(event.target.value)
+  const handleNumberChange = (event) =>
+    setNewNumber(event.target.value)
 
   const addPhoneNumber = (event) => {
     console.log('add')
     event.preventDefault()
     const phoneNumberObject = {
       name: newName,
+      number: newNumber,
     }
 
     const isFound = phoneNumbers.find(listing => listing.name === newName)
@@ -39,6 +51,7 @@ const App = () => {
 
     setPhoneNumbers(phoneNumbers.concat(phoneNumberObject))
     setNewName('')
+    setNewNumber('')
   }
 
   return (
@@ -52,6 +65,9 @@ const App = () => {
           <legend>Phonebook</legend>
           <label htmlFor="name">name</label>
           <input name='name' value={newName} onChange={handleNameChange} />
+          <br />
+          <label htmlFor="number">number</label>
+          <input name='number' value={newNumber} onChange={handleNumberChange} />
           <div>
           <button type="submit">add</button>
           </div>
