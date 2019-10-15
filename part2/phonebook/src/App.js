@@ -7,21 +7,35 @@ const PhoneNumber = ({phoneNumber}) =>
     <td>{phoneNumber.number}</td>
   </tr>
 
-const PhoneList = ({phoneNumbers}) =>
-  <>
-    <h2>Numbers</h2>
-    <table className='center' >
-      <tbody>
-        <tr>
-          <th> Name </th>
-          <th> Number </th>
-        </tr>
-        { phoneNumbers.map( phoneNumber =>
-          <PhoneNumber key={phoneNumber.name} phoneNumber={phoneNumber} />
-        ) }
-      </tbody>
-    </table>
-  </>
+const PhoneList = ({phoneNumbers, filter}) => {
+
+  const filterRegEx = new RegExp(filter, 'i')
+
+  // filter the listings
+  const filteredListings = () => {
+    return phoneNumbers
+      .filter(listing => {
+          return listing.name.search(filterRegEx)>=0
+      })
+  }
+
+  return (
+    <>
+      <h2>Numbers</h2>
+      <table className='center' >
+        <tbody>
+          <tr>
+            <th> Name </th>
+            <th> Number </th>
+          </tr>
+          { filteredListings().map( phoneNumber =>
+            <PhoneNumber key={phoneNumber.name} phoneNumber={phoneNumber} />
+          ) }
+        </tbody>
+      </table>
+    </>
+  )
+}
 
 const App = () => {
   const [ phoneNumbers, setPhoneNumbers] = useState([
@@ -89,7 +103,7 @@ const App = () => {
           </div>
         </fieldset>
       </form>
-      <PhoneList phoneNumbers={phoneNumbers} />
+      <PhoneList phoneNumbers={phoneNumbers} filter={search}/>
 
     </div>
   )
