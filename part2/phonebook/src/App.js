@@ -29,11 +29,15 @@ const App = () => {
   ])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ search, setSearch ] = useState('')
 
   const handleNameChange = (event) =>
     setNewName(event.target.value)
   const handleNumberChange = (event) =>
     setNewNumber(event.target.value)
+  const handleSearchChange = (event) =>
+    setSearch(event.target.value)
+
 
   const addPhoneNumber = (event) => {
     console.log('add')
@@ -62,14 +66,25 @@ const App = () => {
 
       <form onSubmit={addPhoneNumber}>
         <fieldset>
-          <legend>Phonebook</legend>
-          <label htmlFor="name">name</label>
-          <input name='name' value={newName} onChange={handleNameChange} />
-          <br />
-          <label htmlFor="number">number</label>
-          <input name='number' value={newNumber} onChange={handleNumberChange} />
+          <legend>Search</legend>
           <div>
-          <button type="submit">add</button>
+            <label htmlFor="search">search</label>
+            <input name='search' value={search} onChange={handleSearchChange} />
+          </div>
+
+        </fieldset>
+        <fieldset>
+          <legend>New Entry</legend>
+          <div>
+            <label htmlFor="name">name</label>
+            <input name='name' value={newName} onChange={handleNameChange} />
+          </div>
+          <div>
+            <label htmlFor="number">number</label>
+            <input name='number' value={newNumber} onChange={handleNumberChange} />
+          </div>
+          <div>
+            <button type="submit">add</button>
           </div>
         </fieldset>
       </form>
