@@ -37,6 +37,18 @@ const PhoneList = ({phoneNumbers, filter}) => {
   )
 }
 
+const Filter = ({search, clear}) =>
+  <>
+    <fieldset>
+      <legend>Search</legend>
+      <div>
+        <label htmlFor="search">search.label</label>
+        <input name={search.label} value={search.vaue} onChange={search.handle} />
+        <button onClick={clear}> x </button>
+      </div>
+    </fieldset>
+  </>
+
 const App = () => {
   const [ phoneNumbers, setPhoneNumbers] = useState([
     { name: 'Arto Hellas', number: '553' }
@@ -78,14 +90,10 @@ const App = () => {
         Phonebook
       </header>
 
-      <fieldset>
-        <legend>Search</legend>
-        <div>
-          <label htmlFor="search">search</label>
-          <input name='search' value={search} onChange={handleSearchChange} />
-          <button onClick={()=>setSearch('')}> x </button>
-        </div>
-      </fieldset>
+      <Filter
+        search={ {label: 'search', vaule: {search}, handle: handleSearchChange} }
+        clear={()=>setSearch('') }
+      />
 
       <form onSubmit={addPhoneNumber}>
         <fieldset>
