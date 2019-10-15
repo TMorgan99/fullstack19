@@ -1,12 +1,14 @@
 import React, {useState} from 'react'
 import './App.css'
 
+// format a line in the PhoneList table
 const PhoneNumber = ({phoneNumber}) =>
   <tr>
     <td>{phoneNumber.name}</td>
     <td>{phoneNumber.number}</td>
   </tr>
 
+// show the PhoneList table
 const PhoneList = ({phoneNumbers, filter}) => {
 
   const filterRegEx = new RegExp(filter, 'i')
@@ -37,17 +39,43 @@ const PhoneList = ({phoneNumbers, filter}) => {
   )
 }
 
+// simple field for unputs
+const Field = ({label, value, handle}) =>
+  <>
+    <label htmlFor="name">{label}</label>
+    <input name={label} value={value} onChange={handle} />
+  </>
+
+// input searach filter
 const Filter = ({search, clear}) =>
   <>
     <fieldset>
       <legend>Search</legend>
       <div>
-        <label htmlFor="search">search.label</label>
-        <input name={search.label} value={search.vaue} onChange={search.handle} />
+        <Field label={search.label} value={search.value} handle={search.handle} />
         <button onClick={clear}> x </button>
       </div>
     </fieldset>
   </>
+
+// add numbers to the list
+const PhoneNumberForm = ({submit, fields}) =>
+  <form onSubmit={submit}>
+    <fieldset>
+      <legend>New Entry</legend>
+      <div>
+        <Field label={fields[0].label} value={fields[0].value} handle={fields[0].handle} />
+      </div>
+
+      <div>
+        <Field label={fields[1].label} value={fields[1].value} handle={fields[1].handle} />
+      </div>
+
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </fieldset>
+  </form>
 
 const App = () => {
   const [ phoneNumbers, setPhoneNumbers] = useState([
@@ -63,7 +91,6 @@ const App = () => {
     setNewNumber(event.target.value)
   const handleSearchChange = (event) =>
     setSearch(event.target.value)
-
 
   const addPhoneNumber = (event) => {
     console.log('add')
@@ -91,26 +118,19 @@ const App = () => {
       </header>
 
       <Filter
-        search={ {label: 'search', vaule: {search}, handle: handleSearchChange} }
+        search={ {label: 'search', value: search, handle: handleSearchChange} }
         clear={()=>setSearch('') }
       />
 
-      <form onSubmit={addPhoneNumber}>
-        <fieldset>
-          <legend>New Entry</legend>
-          <div>
-            <label htmlFor="name">name</label>
-            <input name='name' value={newName} onChange={handleNameChange} />
-          </div>
-          <div>
-            <label htmlFor="number">number</label>
-            <input name='number' value={newNumber} onChange={handleNumberChange} />
-          </div>
-          <div>
-            <button type="submit">add</button>
-          </div>
-        </fieldset>
-      </form>
+      <PhoneNumberForm
+        submit={addPhoneNumber}
+        fields={
+          [
+            { label: 'name', value: newName, handle: handleNameChange },
+            { label: 'number', value: newNumber, handle: handleNumberChange },
+          ]}
+      />
+
       <PhoneList phoneNumbers={phoneNumbers} filter={search}/>
 
     </div>
