@@ -64,15 +64,16 @@ const App = () => {
         Phonebook
       </header>
 
-      <form onSubmit={addPhoneNumber}>
-        <fieldset>
-          <legend>Search</legend>
-          <div>
-            <label htmlFor="search">search</label>
-            <input name='search' value={search} onChange={handleSearchChange} />
-          </div>
+      <fieldset>
+        <legend>Search</legend>
+        <div>
+          <label htmlFor="search">search</label>
+          <input name='search' value={search} onChange={handleSearchChange} />
+          <button onClick={()=>setSearch('')}> x </button>
+        </div>
+      </fieldset>
 
-        </fieldset>
+      <form onSubmit={addPhoneNumber}>
         <fieldset>
           <legend>New Entry</legend>
           <div>
