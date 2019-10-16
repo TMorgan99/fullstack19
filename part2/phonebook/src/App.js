@@ -47,6 +47,12 @@ const App = () => {
     setPhoneNumbers(phoneNumbers.concat(phoneNumberObject))
     setNewName('')
     setNewNumber('')
+    axios
+      .post('http://localhost:3000/persons', phoneNumberObject)
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => console.log(error))
   }
 
   console.log('render', phoneNumbers.length, 'directory entries')
