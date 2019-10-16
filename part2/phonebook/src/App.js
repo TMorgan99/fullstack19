@@ -2,11 +2,9 @@ import React, {useState} from 'react'
 import { Filter, PhoneNumberForm, PhoneList }  from './components/Phonebook'
 import './App.css'
 
-
-const App = () => {
-  const [ phoneNumbers, setPhoneNumbers] = useState([
-    { name: 'Arto Hellas', number: '553' }
-  ])
+const App = ({data}) => {
+  console.log('app load:', data)
+  const [ phoneNumbers, setPhoneNumbers] = useState(data)
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
