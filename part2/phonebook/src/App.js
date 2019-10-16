@@ -1,10 +1,11 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
+import axios from 'axios'
 import { Filter, PhoneNumberForm, PhoneList }  from './components/Phonebook'
 import './App.css'
 
-const App = ({data}) => {
-  console.log('app load:', data)
-  const [ phoneNumbers, setPhoneNumbers] = useState(data)
+const App = () => {
+  console.log('app load:')
+  const [ phoneNumbers, setPhoneNumbers] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
@@ -15,6 +16,19 @@ const App = ({data}) => {
     setNewNumber(event.target.value)
   const handleSearchChange = (event) =>
     setSearch(event.target.value)
+
+  useEffect(()=>{
+      console.log('effect..')
+      axios
+        .get('http://localhost:3000/persons')
+        .then(response => {
+          console.log('promise fulfilled')
+          setPhoneNumbers(response.data)
+          })
+        .catch( error => {
+          console.log( error )
+          })
+      }, [])
 
   const addPhoneNumber = (event) => {
     console.log('add')
@@ -35,6 +49,7 @@ const App = ({data}) => {
     setNewNumber('')
   }
 
+  console.log('render', phoneNumbers.length, 'directory entries')
   return (
     <div className="App">
       <header className="App-header">
