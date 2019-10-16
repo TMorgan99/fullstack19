@@ -2,8 +2,43 @@ import React, { useEffect, useState } from 'react'
 import './App.css'
 import axios from 'axios'
 
-const Weather = ({location}) =>
-  <p> Sunny as always in {location} </p>
+const Weather = ({location}) => {
+  const WEATHERSTACK_URL = 'http://api.weatherstack.com/current'
+  const MY_WEATHERSTACK_ACCESS_KEY = '87d3dced1dbbe2df57d120a698e83cda'
+  const [currentWeather, setCurrentWeather] = useState(undefined)
+
+  const getWeather = () => {
+    const params = {
+      access_key: MY_WEATHERSTACK_ACCESS_KEY,
+      query: location
+      }
+    axios
+      .get(WEATHERSTACK_URL, {params})
+      .then(response => {
+          setCurrentWeather(response.data.current)
+        })
+      .catch(error => { console.log(error) })
+  }
+
+// why the useEffect hook didnt work here?
+// need to be careful, I only have a limited quota of requests to the webservice
+  if (currentWeather === undefined) getWeather()
+
+  return ( (currentWeather === undefined)
+    ? <p> 'loading weather ...' </p>
+    : <>
+        <h3> Currently in {location} </h3>
+        <p>
+          temperature: {currentWeather.temperature} <br />
+          precip: {currentWeather.precip} <br />
+          wind: {currentWeather.wind_speed} {currentWeather.wind_dir} <br />
+          {currentWeather.weather_descriptions[0]} <br />
+          <img alt="weather icon" src={currentWeather.weather_icons[0]} />
+        </p>
+      </>
+  )
+}
+
 
 const OneCountry = ({country}) =>
   <>
