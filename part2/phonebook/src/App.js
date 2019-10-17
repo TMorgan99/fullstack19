@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import axios from 'axios'
+// import axios from 'axios'
+import peopleService from './services/people'
 import { Filter, PhoneNumberForm, PhoneList }  from './components/Phonebook'
 import './App.css'
 
@@ -19,11 +20,10 @@ const App = () => {
 
   useEffect(()=>{
       console.log('effect..')
-      axios
-        .get('http://localhost:3000/persons')
+      peopleService.getAll()
         .then(response => {
           console.log('promise fulfilled')
-          setPhoneNumbers(response.data)
+          setPhoneNumbers(response)
           })
         .catch( error => {
           console.log( error )
@@ -47,8 +47,7 @@ const App = () => {
     setPhoneNumbers(phoneNumbers.concat(phoneNumberObject))
     setNewName('')
     setNewNumber('')
-    axios
-      .post('http://localhost:3000/persons', phoneNumberObject)
+    peopleService.create( phoneNumberObject )
       .then(response => {
         console.log(response)
       })
