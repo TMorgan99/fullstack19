@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react'
 // import axios from 'axios'
 import peopleService from './services/people'
-import { Filter, PhoneNumberForm, PhoneList }  from './components/Phonebook'
+import { Filter, PeopleForm, PhoneList }  from './components/Phonebook'
 import './App.css'
 
+// ////////////////////////////////////////////////////////////////////
 const App = () => {
   console.log('app load:')
   const [ phoneNumbers, setPhoneNumbers] = useState([])
@@ -18,6 +19,22 @@ const App = () => {
   const handleSearchChange = (event) =>
     setSearch(event.target.value)
 
+  // //////////////////////////////////////////////////////////////////
+  const remove = (id) => {
+    // find the record in question!
+    // this is not a simple index, we need to find it by id.
+    const item = phoneNumbers.filter(p=>p.id===id)[0]
+    if ( window.confirm( `Do you want to remove '${item.name}' ?` )) {
+        console.log( `The user has requested the removal of ${id}`)
+        peopleService.remove(id)
+        // this could be a .then chaing?
+        setPhoneNumbers(
+          phoneNumbers.filter(phoneNumber => phoneNumber.id !== id)
+        )
+    }
+  }
+
+  // //////////////////////////////////////////////////////////////////
   useEffect(()=>{
       console.log('effect..')
       peopleService.getAll()
@@ -30,6 +47,7 @@ const App = () => {
           })
       }, [])
 
+  // //////////////////////////////////////////////////////////////////
   const addPhoneNumber = (event) => {
     console.log('add')
     event.preventDefault()
@@ -54,7 +72,10 @@ const App = () => {
       .catch(error => console.log(error))
   }
 
+  // peopleService.remove( 7 )
+
   console.log('render', phoneNumbers.length, 'directory entries')
+  // //////////////////////////////////////////////////////////////////
   return (
     <div className="App">
       <header className="App-header">
@@ -66,7 +87,7 @@ const App = () => {
         clear={()=>setSearch('') }
       />
 
-      <PhoneNumberForm
+      <PeopleForm
         submit={addPhoneNumber}
         fields={
           [
@@ -75,7 +96,7 @@ const App = () => {
           ]}
       />
 
-      <PhoneList phoneNumbers={phoneNumbers} filter={search}/>
+      <PhoneList phoneNumbers={phoneNumbers} remove={remove} filter={search}/>
 
     </div>
   )

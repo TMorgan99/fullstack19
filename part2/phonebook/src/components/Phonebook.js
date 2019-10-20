@@ -1,14 +1,17 @@
 import React from 'react'
 
+// ////////////////////////////////////////////////////////////////////
 // format a line in the PhoneList table
-const PhoneNumber = ({phoneNumber}) =>
+const PhoneNumber = ({phoneNumber, remove }) =>
   <tr>
+    <td> <button onClick={()=>remove(phoneNumber.id)}> x {phoneNumber.id} </button> </td>
     <td>{phoneNumber.name}</td>
     <td>{phoneNumber.number}</td>
   </tr>
 
+// ////////////////////////////////////////////////////////////////////
 // show the PhoneList table
-const PhoneList = ({phoneNumbers, filter}) => {
+const PhoneList = ({phoneNumbers, remove, filter}) => {
 
   const filterRegEx = new RegExp(filter, 'i')
 
@@ -26,11 +29,13 @@ const PhoneList = ({phoneNumbers, filter}) => {
       <table className='center' >
         <tbody>
           <tr>
+            <th> [x] </th>
             <th> Name </th>
             <th> Number </th>
           </tr>
           { filteredListings().map( phoneNumber =>
-            <PhoneNumber key={phoneNumber.name} phoneNumber={phoneNumber} />
+            <PhoneNumber key={phoneNumber.name}
+              phoneNumber={phoneNumber} remove={remove} />
           ) }
         </tbody>
       </table>
@@ -38,6 +43,7 @@ const PhoneList = ({phoneNumbers, filter}) => {
   )
 }
 
+// ////////////////////////////////////////////////////////////////////
 // simple field for unputs
 const Field = ({label, value, handle}) =>
   <>
@@ -57,8 +63,9 @@ const Filter = ({search, clear}) =>
     </fieldset>
   </>
 
+// ////////////////////////////////////////////////////////////////////
 // add numbers to the list
-const PhoneNumberForm = ({submit, fields}) =>
+const PeopleForm = ({submit, fields}) =>
   <form onSubmit={submit}>
     <fieldset>
       <legend>New Entry</legend>
@@ -76,4 +83,4 @@ const PhoneNumberForm = ({submit, fields}) =>
     </fieldset>
   </form>
 
-export { Filter, PhoneNumberForm, PhoneList }
+export { Filter, PeopleForm, PhoneList }
