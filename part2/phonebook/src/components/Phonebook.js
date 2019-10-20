@@ -4,7 +4,7 @@ import React from 'react'
 // format a line in the PhoneList table
 const PhoneNumber = ({phoneNumber, remove }) =>
   <tr>
-    <td> <button onClick={()=>remove(phoneNumber.id)}> x {phoneNumber.id} </button> </td>
+    <td> <button onClick={()=>remove(phoneNumber.id)}> x </button> </td>
     <td>{phoneNumber.name}</td>
     <td>{phoneNumber.number}</td>
   </tr>

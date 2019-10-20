@@ -20,21 +20,6 @@ const App = () => {
     setSearch(event.target.value)
 
   // //////////////////////////////////////////////////////////////////
-  const remove = (id) => {
-    // find the record in question!
-    // this is not a simple index, we need to find it by id.
-    const item = phoneNumbers.filter(p=>p.id===id)[0]
-    if ( window.confirm( `Do you want to remove '${item.name}' ?` )) {
-        console.log( `The user has requested the removal of ${id}`)
-        peopleService.remove(id)
-        // this could be a .then chaing?
-        setPhoneNumbers(
-          phoneNumbers.filter(phoneNumber => phoneNumber.id !== id)
-        )
-    }
-  }
-
-  // //////////////////////////////////////////////////////////////////
   useEffect(()=>{
       console.log('effect..')
       peopleService.getAll()
@@ -62,15 +47,34 @@ const App = () => {
       return
     }
 
-    setPhoneNumbers(phoneNumbers.concat(phoneNumberObject))
-    setNewName('')
-    setNewNumber('')
     peopleService.create( phoneNumberObject )
       .then(response => {
-        console.log(response)
+        // add the 'id' field
+        setPhoneNumbers(phoneNumbers.concat(response))
+        console.log('Added:', response)
       })
       .catch(error => console.log(error))
+      .finally(()=>{
+        setNewName('')
+        setNewNumber('')
+      })
   }
+
+  // //////////////////////////////////////////////////////////////////
+  const remove = (id) => {
+    // find the record in question!
+    // this is not a simple index, we need to find it by id.
+    const item = phoneNumbers.filter(p=>p.id===id)[0]
+    if ( window.confirm( `Do you want to remove '${item.name}' ?` )) {
+        console.log( `The user has requested the removal of ${id}`)
+        peopleService.remove(id)
+        // this could be a .then chaing?
+        setPhoneNumbers(
+          phoneNumbers.filter(phoneNumber => phoneNumber.id !== id)
+        )
+    }
+  }
+
 
   // peopleService.remove( 7 )
 
