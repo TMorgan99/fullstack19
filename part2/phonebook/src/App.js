@@ -42,7 +42,8 @@ const App = () => {
 
     const isFound = people.find(listing => listing.name === newName)
     if (isFound) {
-      if (window.confirm( `${newName} has already been added to phonebook
+      if (window.confirm(
+        `${newName} has already been added to phonebook
         Did you want to update the number?`)) {
         const id = isFound.id
         peopleService.update( id, newItemObject )
