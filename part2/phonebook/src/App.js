@@ -1,31 +1,30 @@
 import React, {useEffect, useState} from 'react'
-// import axios from 'axios'
 import peopleService from './services/people'
-import { Filter, PeopleForm, PhoneList }  from './components/Phonebook'
+import { Filter, PeopleForm, PeopleList }  from './components/Phonebook'
 import './App.css'
 
 // ////////////////////////////////////////////////////////////////////
 const App = () => {
-  console.log('app load:')
-  const [ phoneNumbers, setPhoneNumbers] = useState([])
+  const [ people, setPeople] = useState([])
+  const [ search, setSearch ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [ search, setSearch ] = useState('')
-
+  //
+  const handleSearchChange = (event) =>
+    setSearch(event.target.value)
   const handleNameChange = (event) =>
     setNewName(event.target.value)
   const handleNumberChange = (event) =>
     setNewNumber(event.target.value)
-  const handleSearchChange = (event) =>
-    setSearch(event.target.value)
-
+  //
+  console.log('app load:')
   // //////////////////////////////////////////////////////////////////
   useEffect(()=>{
       console.log('effect..')
       peopleService.getAll()
         .then(response => {
           console.log('promise fulfilled')
-          setPhoneNumbers(response)
+          setPeople(response)
           })
         .catch( error => {
           console.log( error )
@@ -33,52 +32,55 @@ const App = () => {
       }, [])
 
   // //////////////////////////////////////////////////////////////////
-  const addPhoneNumber = (event) => {
-    console.log('add')
+  const addItem = (event) => {
+    console.log('add item')
     event.preventDefault()
-    const phoneNumberObject = {
+    const newItemObject = {
       name: newName,
       number: newNumber,
     }
 
-    const isFound = phoneNumbers.find(listing => listing.name === newName)
+    const isFound = people.find(listing => listing.name === newName)
     if (isFound) {
-      alert( `${newName} has already been added to phonebook`)
-      return
+      if (window.confirm( `${newName} has already been added to phonebook
+        Did you want to update the number?`)) {
+        const id = isFound.id
+        peopleService.update( id, newItemObject )
+        .then(newRecord => {
+          const newPeople = people.map( item =>
+            id === item.id ? newRecord : item )
+          setPeople(newPeople)
+        })
+      } else {
+        console.log('update withheld') // no changes
+      }
+    } else { // create new record
+      peopleService.create( newItemObject )
+        .then(response => {  // add the 'id' field
+          setPeople(people.concat(response))
+          console.log('Added:', response)
+        })
+        .catch(error => console.log(error))
     }
-
-    peopleService.create( phoneNumberObject )
-      .then(response => {
-        // add the 'id' field
-        setPhoneNumbers(phoneNumbers.concat(response))
-        console.log('Added:', response)
-      })
-      .catch(error => console.log(error))
-      .finally(()=>{
-        setNewName('')
-        setNewNumber('')
-      })
+    setNewName('')
+    setNewNumber('')
   }
 
   // //////////////////////////////////////////////////////////////////
-  const remove = (id) => {
+  const removeItem = (id) => {
     // find the record in question!
     // this is not a simple index, we need to find it by id.
-    const item = phoneNumbers.filter(p=>p.id===id)[0]
+    const item = people.filter( p=>p.id===id)[0]
     if ( window.confirm( `Do you want to remove '${item.name}' ?` )) {
         console.log( `The user has requested the removal of ${id}`)
         peopleService.remove(id)
         // this could be a .then chaing?
-        setPhoneNumbers(
-          phoneNumbers.filter(phoneNumber => phoneNumber.id !== id)
-        )
+        setPeople( people.filter(item => item.id !== id) )
     }
   }
 
 
-  // peopleService.remove( 7 )
-
-  console.log('render', phoneNumbers.length, 'directory entries')
+  // console.log('render', people.length, 'directory entries')
   // //////////////////////////////////////////////////////////////////
   return (
     <div className="App">
@@ -92,7 +94,7 @@ const App = () => {
       />
 
       <PeopleForm
-        submit={addPhoneNumber}
+        submit={addItem}
         fields={
           [
             { label: 'name', value: newName, handle: handleNameChange },
@@ -100,7 +102,7 @@ const App = () => {
           ]}
       />
 
-      <PhoneList phoneNumbers={phoneNumbers} remove={remove} filter={search}/>
+      <PeopleList people={people} remove={removeItem} filter={search}/>
 
     </div>
   )

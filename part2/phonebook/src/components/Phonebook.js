@@ -11,13 +11,12 @@ const PhoneNumber = ({phoneNumber, remove }) =>
 
 // ////////////////////////////////////////////////////////////////////
 // show the PhoneList table
-const PhoneList = ({phoneNumbers, remove, filter}) => {
+const PeopleList = ({people, remove, filter}) => {
 
   const filterRegEx = new RegExp(filter, 'i')
 
-  // filter the listings
   const filteredListings = () => {
-    return phoneNumbers
+    return people
       .filter(listing => {
           return listing.name.search(filterRegEx)>=0
       })
@@ -83,4 +82,4 @@ const PeopleForm = ({submit, fields}) =>
     </fieldset>
   </form>
 
-export { Filter, PeopleForm, PhoneList }
+export { Filter, PeopleForm, PeopleList }
