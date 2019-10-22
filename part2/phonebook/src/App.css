@@ -26,3 +26,13 @@ table.center {
     margin-left:15%;
     margin-right:15%;
 }
+
+
+.error {
+  color: red;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  padding: 10px;
+  margin-bottom: 10px;
+}

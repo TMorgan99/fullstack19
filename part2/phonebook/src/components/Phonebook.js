@@ -1,6 +1,16 @@
 import React from 'react'
 
 // ////////////////////////////////////////////////////////////////////
+const Notification = ({message}) => {
+  if (message === null) return null
+  return (
+    <div className='error'>
+     {message}
+  </div>
+  )
+}
+
+// ////////////////////////////////////////////////////////////////////
 // format a line in the PhoneList table
 const PhoneNumber = ({phoneNumber, remove }) =>
   <tr>
@@ -82,4 +92,4 @@ const PeopleForm = ({submit, fields}) =>
     </fieldset>
   </form>
 
-export { Filter, PeopleForm, PeopleList }
+export { Notification, Filter, PeopleForm, PeopleList }

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import peopleService from './services/people'
-import { Filter, PeopleForm, PeopleList }  from './components/Phonebook'
+import { Notification, Filter, PeopleForm, PeopleList }  from './components/Phonebook'
 import './App.css'
 
 // ////////////////////////////////////////////////////////////////////
@@ -9,7 +9,8 @@ const App = () => {
   const [ search, setSearch ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  //
+  const [ errorMessage, setErrorMessage ] = useState('whoops!')
+
   const handleSearchChange = (event) =>
     setSearch(event.target.value)
   const handleNameChange = (event) =>
@@ -17,7 +18,15 @@ const App = () => {
   const handleNumberChange = (event) =>
     setNewNumber(event.target.value)
   //
-  console.log('app load:')
+  // console.log('app load:')
+  // //////////////////////////////////////////////////////////////////
+  const errorMessageWithTimeout = (message) => {
+    setErrorMessage(message)
+    setTimeout(()=> {
+      setErrorMessage(null)
+    }, 5000 )
+  }
+
   // //////////////////////////////////////////////////////////////////
   useEffect(()=>{
       console.log('effect..')
@@ -33,7 +42,7 @@ const App = () => {
 
   // //////////////////////////////////////////////////////////////////
   const addItem = (event) => {
-    console.log('add item')
+    // console.log('add item')
     event.preventDefault()
     const newItemObject = {
       name: newName,
@@ -51,15 +60,16 @@ const App = () => {
           const newPeople = people.map( item =>
             id === item.id ? newRecord : item )
           setPeople(newPeople)
+          errorMessageWithTimeout(`${newName} has been updated`)
         })
       } else {
-        console.log('update withheld') // no changes
+        // console.log('update withheld') // no changes
       }
     } else { // create new record
       peopleService.create( newItemObject )
         .then(response => {  // add the 'id' field
           setPeople(people.concat(response))
-          console.log('Added:', response)
+          errorMessageWithTimeout(`${response.name} has been added`)
         })
         .catch(error => console.log(error))
     }
@@ -77,6 +87,7 @@ const App = () => {
         peopleService.remove(id)
         // this could be a .then chaing?
         setPeople( people.filter(item => item.id !== id) )
+        errorMessageWithTimeout(`${item.name} has been removed`)
     }
   }
 
@@ -88,6 +99,8 @@ const App = () => {
       <header className="App-header">
         Phonebook
       </header>
+
+      <Notification message={errorMessage} />
 
       <Filter
         search={ {label: 'search', value: search, handle: handleSearchChange} }
