@@ -1,7 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import peopleService from './services/people'
-import { Notification, Filter, PeopleForm, PeopleList }  from './components/Phonebook'
+import { Notification }  from './components/Notification'
+import { Filter, PeopleForm, PeopleList }  from './components/Phonebook'
 import './App.css'
+
+// testing update of edleted record.
+const TESTING_REMOTE_DELETE = true
 
 // ////////////////////////////////////////////////////////////////////
 const App = () => {
@@ -9,7 +13,7 @@ const App = () => {
   const [ search, setSearch ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [ errorMessage, setErrorMessage ] = useState('whoops!')
+  const [ classMessage, setClassMessage ] = useState(null)
 
   const handleSearchChange = (event) =>
     setSearch(event.target.value)
@@ -17,28 +21,53 @@ const App = () => {
     setNewName(event.target.value)
   const handleNumberChange = (event) =>
     setNewNumber(event.target.value)
-  //
+
   // console.log('app load:')
   // //////////////////////////////////////////////////////////////////
-  const errorMessageWithTimeout = (message) => {
-    setErrorMessage(message)
-    setTimeout(()=> {
-      setErrorMessage(null)
-    }, 5000 )
+  const notificationWithTimeout = (classMessage) => {
+    console.log( 'setup', classMessage)
+    setClassMessage(classMessage)
+    setTimeout(()=> { setClassMessage(null) }, 2500)
   }
 
   // //////////////////////////////////////////////////////////////////
   useEffect(()=>{
       console.log('effect..')
+      // notificationWithTimeout('info:please wait for the data to load')
       peopleService.getAll()
         .then(response => {
           console.log('promise fulfilled')
           setPeople(response)
-          })
+        })
         .catch( error => {
           console.log( error )
-          })
+        })
       }, [])
+
+  // //////////////////////////////////////////////////////////////////
+  const updateItem = (id, newItemObject) => {
+    if (TESTING_REMOTE_DELETE)
+      peopleService.remove(id)  // simulate the other client
+    // but do not update our UI
+
+    peopleService.update( id, newItemObject )
+      .then(newRecord => {
+        const newPeople = people.map( item => item.id === id ? newRecord : item )
+        setPeople(newPeople)
+        notificationWithTimeout( `info:${newName} has been updated` )
+      })
+      .catch(error => {
+        console.log('deleted record:', error)  // code 404
+        notificationWithTimeout( `error:this record has been deleted remotely` )
+        // refresh with server
+        peopleService.getAll()
+          .then(response => {
+            console.log('refresh')
+            setPeople(response)
+          })
+          .catch( error => { console.log( error ) })
+      })
+  }
 
   // //////////////////////////////////////////////////////////////////
   const addItem = (event) => {
@@ -50,26 +79,16 @@ const App = () => {
     }
 
     const isFound = people.find(listing => listing.name === newName)
-    if (isFound) {
-      if (window.confirm(
+    if (isFound && window.confirm(
         `${newName} has already been added to phonebook
         Did you want to update the number?`)) {
-        const id = isFound.id
-        peopleService.update( id, newItemObject )
-        .then(newRecord => {
-          const newPeople = people.map( item =>
-            id === item.id ? newRecord : item )
-          setPeople(newPeople)
-          errorMessageWithTimeout(`${newName} has been updated`)
-        })
-      } else {
-        // console.log('update withheld') // no changes
-      }
-    } else { // create new record
+          updateItem(isFound.id, newItemObject)
+        }
+    else { // create new record
       peopleService.create( newItemObject )
         .then(response => {  // add the 'id' field
           setPeople(people.concat(response))
-          errorMessageWithTimeout(`${response.name} has been added`)
+          notificationWithTimeout( `info:${response.name} has been added` )
         })
         .catch(error => console.log(error))
     }
@@ -84,10 +103,10 @@ const App = () => {
     const item = people.filter( p=>p.id===id)[0]
     if ( window.confirm( `Do you want to remove '${item.name}' ?` )) {
         console.log( `The user has requested the removal of ${id}`)
-        peopleService.remove(id)
+      peopleService.remove(id)
         // this could be a .then chaing?
-        setPeople( people.filter(item => item.id !== id) )
-        errorMessageWithTimeout(`${item.name} has been removed`)
+      setPeople( people.filter(item => item.id !== id) )
+      notificationWithTimeout(`info:${item.name} has been removed`)
     }
   }
 
@@ -100,7 +119,7 @@ const App = () => {
         Phonebook
       </header>
 
-      <Notification message={errorMessage} />
+      <Notification classMessage={classMessage} />
 
       <Filter
         search={ {label: 'search', value: search, handle: handleSearchChange} }
