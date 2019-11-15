@@ -1,0 +1,67 @@
+### Root
+GET         http://localhost:3001
+
+### Persons list
+GET         http://localhost:3001/api/persons
+
+### Info
+GET         http://localhost:3001/info
+
+### Single Request (malformed)
+GET         http://localhost:3001/api/persons/3
+
+### Single Request = exists
+GET         http://localhost:3001/api/persons/5dc9ee7fbcca7238d0d13df7
+
+### Single Request = not exists 204 No Content
+GET         http://localhost:3001/api/persons/5dc9ee7fbcca7238d0d13df9
+
+
+### Delete a Sengle Record    -- 204 No Content
+DELETE      http://localhost:3001/api/persons/5dc9ee7fbcca7238d0d13df7
+
+### Post new Record
+POST        http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+      "name": "Bond, James Bond",
+      "number": "the number is: 007"
+}
+
+### Post with name missing
+POST        http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+      "number": "007"
+}
+
+### Post with number missing
+POST        http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+      "name": "Bond, James Bond"
+}
+
+### Post new Record name, number too short!
+POST        http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+      "name": "Bo",
+      "number": "007000"
+}
+
+
+### Post with non-unique name 
+POST        http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+      "name": "Ada Lovelace",
+      "number": "39-44-5323523"
+}
+
+
