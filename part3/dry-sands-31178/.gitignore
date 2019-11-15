@@ -1,4 +1,3 @@
 node_modules/
-dbtest.js
 .env
-heroku.config.sh
+

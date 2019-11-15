@@ -9,7 +9,11 @@
     "lint": "eslint .",
     "start": "node index.js",
     "watch": "nodemon index.js",
-    "heroku": "git push heroku master"
+
+    "deploy": "git push heroku master",
+    "build:ui": "cd ../../part2/phonebook/; yarn build ; cp -r build ../../part3/dry-sands-31178/",
+    "deploy:full": "yarn build:ui && git add . && git commit -m uibuild && yarn deploy",    
+    "heroku:vars": "node heroku-config.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
