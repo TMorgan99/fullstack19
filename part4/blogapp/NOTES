@@ -1,0 +1,4 @@
+NOTES
+
+yarn add express mongoose dotenv
+yarn add nodemon --dev 

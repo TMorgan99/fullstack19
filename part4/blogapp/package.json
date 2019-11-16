@@ -1,0 +1,23 @@
+{
+  "name": "blogapp",
+  "version": "0.0.1",
+  "description": "blog",
+  "main": "index.js",
+  "author": "Tim Morgan",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.7.11"
+  },
+  "scripts": {
+    "start": "node    index.js",
+    "watch": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+
+}
