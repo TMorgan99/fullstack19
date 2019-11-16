@@ -6,6 +6,7 @@
   "author": "Tim Morgan",
   "license": "MIT",
   "devDependencies": {
+    "jest": "^24.9.0",
     "nodemon": "^1.19.4"
   },
   "dependencies": {
@@ -17,7 +18,9 @@
   "scripts": {
     "start": "node    index.js",
     "watch": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --verbose"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
-
 }
