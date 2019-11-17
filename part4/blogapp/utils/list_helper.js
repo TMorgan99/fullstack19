@@ -6,7 +6,19 @@ const totalLikes = (bloglist) =>
   bloglist
     .reduce((acc, blog) =>  acc + blog.likes, 0)
 
-  module.exports = {
+
+// 
+const favoriteBlog = (bloglist) => {
+  const maxValue = bloglist
+    .reduce((acc, blog)  =>  Math.max(acc, blog.likes), 0)
+  return bloglist.find( blog => blog.likes === maxValue)
+
+    // return bloglist[1]
+}
+
+
+module.exports = {
   dummy,
+  favoriteBlog,
   totalLikes
 }
